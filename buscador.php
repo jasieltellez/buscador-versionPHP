@@ -54,21 +54,28 @@ return $ciudadesOpt;
 
 
 function GetCustom(){
+  $seleccionados=[];
 $data = file_get_contents($GLOBALS['path']);
 $inmuebles = json_decode($data);
 for ($i=0; $i < count($inmuebles) ; $i++) {
+$precioImueble=(substr($inmuebles[$i]->Precio,1));
+$precioImueble=(float)str_replace(',', '', $precioImueble);
+
   if (($inmuebles[$i]->Ciudad!=$GLOBALS['ciudad'])&&($GLOBALS['ciudad']!="All")) {
-    unset($inmuebles[$i]);
+
   }
   elseif (($inmuebles[$i]->Tipo!=$GLOBALS['tipo'])&&($GLOBALS['tipo']!="All")) {
-  unset($inmuebles[$i]);
+
   }
-  elseif (((float)$inmuebles[$i]->Precio<(float)$GLOBALS['min'])||((float)$inmuebles[$i]->Precio>(float)$GLOBALS['max'])) {
-    unset($inmuebles[$i]);
+  elseif (($precioImueble<(float)$GLOBALS['min'])||($precioImueble>(float)$GLOBALS['max'])) {
+
+  }
+  else {
+    array_push($seleccionados,$inmuebles[$i]);
   }
 }
 
-return $inmuebles;
+return $seleccionados;
 }
 
 function GetAllTypes(){
